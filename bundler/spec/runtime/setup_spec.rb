@@ -143,12 +143,8 @@ RSpec.describe "Bundler.setup" do
         gem "rails"
       G
 
-      # We require an absolute path because relying on the $LOAD_PATH behaves
-      # inconsistently depending on whether we're in a ruby-core setup (and
-      # bundler's lib is in RUBYLIB) or not.
-
       ruby <<-RUBY
-        require '#{lib_dir}/bundler'
+        require 'bundler'
         Bundler.setup
         puts $LOAD_PATH
       RUBY
@@ -156,8 +152,8 @@ RSpec.describe "Bundler.setup" do
       load_path = clean_load_path(out.split("\n"))
 
       expect(load_path).to start_with(
-        "/gems/rails-2.3.2/lib",
         "/gems/bundler-#{Bundler::VERSION}/lib",
+        "/gems/rails-2.3.2/lib",
         "/gems/activeresource-2.3.2/lib",
         "/gems/activerecord-2.3.2/lib",
         "/gems/actionpack-2.3.2/lib",

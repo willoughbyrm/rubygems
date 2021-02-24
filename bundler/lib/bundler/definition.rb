@@ -197,9 +197,8 @@ module Bundler
                              "that means the author of #{locked_gem} has removed it. You'll need to update your bundle " \
                              "to a version other than #{locked_gem} that hasn't been removed in order to install."
         end
-        unless specs["bundler"].any?
-          bundler = sources.metadata_source.specs.search(Gem::Dependency.new("bundler", VERSION)).last
-          specs["bundler"] = bundler
+        if specs["bundler"].empty? && bundler_specs.any?
+          specs["bundler"] = bundler_specs.first
         end
 
         specs
@@ -923,8 +922,16 @@ module Bundler
       end
       source_requirements[:global] = index unless Bundler.feature_flag.disable_multisource?
       source_requirements[:default_bundler] = source_requirements["bundler"] || source_requirements[:default]
-      source_requirements["bundler"] = sources.metadata_source # needs to come last to override
+
+      if bundler_specs.any?
+        source_requirements["bundler"] = sources.metadata_source # needs to come last to override
+      end
+
       source_requirements
+    end
+
+    def bundler_specs
+      sources.metadata_source.specs.search(Gem::Dependency.new("bundler", VERSION))
     end
 
     def pinned_spec_names(skip = nil)

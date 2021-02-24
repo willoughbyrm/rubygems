@@ -15,7 +15,7 @@ RSpec.describe "Bundler.load" do
     end
 
     it "provides a list of the resolved gems" do
-      expect(Bundler.load.gems).to have_gem("rack-1.0.0", "bundler-#{Bundler::VERSION}")
+      expect(Bundler.load.gems).to have_gem("rack-1.0.0")
     end
 
     it "ignores blank BUNDLE_GEMFILEs" do
@@ -41,7 +41,7 @@ RSpec.describe "Bundler.load" do
     end
 
     it "provides a list of the resolved gems" do
-      expect(Bundler.load.gems).to have_gem("rack-1.0.0", "bundler-#{Bundler::VERSION}")
+      expect(Bundler.load.gems).to have_gem("rack-1.0.0")
     end
   end
 

@@ -674,7 +674,7 @@ class TestGem < Gem::TestCase
     begin
       Dir.chdir 'detect/a/b'
 
-      assert_equal add_bundler_full_name([]), Gem.use_gemdeps.map(&:full_name)
+      assert_equal [], Gem.use_gemdeps.map(&:full_name)
     ensure
       Dir.chdir @tempdir
     end
@@ -1693,7 +1693,7 @@ class TestGem < Gem::TestCase
 
     Gem.use_gemdeps
 
-    assert_equal add_bundler_full_name(%W[a-1 b-1 c-1]), loaded_spec_names
+    assert_equal %W[a-1 b-1 c-1], loaded_spec_names
   end
 
   def test_auto_activation_of_used_gemdeps_file
@@ -1713,18 +1713,10 @@ class TestGem < Gem::TestCase
 
     ENV['RUBYGEMS_GEMDEPS'] = "-"
 
-    expected_specs = [a, b, util_spec("bundler", Bundler::VERSION), c].compact
-    assert_equal expected_specs, Gem.use_gemdeps.sort_by {|s| s.name }
+    assert_equal [a, b, c], Gem.use_gemdeps.sort_by {|s| s.name }
   end
 
   BUNDLER_LIB_PATH = File.expand_path $LOAD_PATH.find {|lp| File.file?(File.join(lp, "bundler.rb")) }
-  BUNDLER_FULL_NAME = "bundler-#{Bundler::VERSION}".freeze
-
-  def add_bundler_full_name(names)
-    names << BUNDLER_FULL_NAME
-    names.sort!
-    names
-  end
 
   def test_looks_for_gemdeps_files_automatically_on_start
     skip "Requiring bundler messes things up" if Gem.java_platform?
@@ -1858,7 +1850,7 @@ class TestGem < Gem::TestCase
 
     Gem.use_gemdeps gem_deps_file
 
-    assert_equal add_bundler_full_name(%W[a-1]), loaded_spec_names
+    assert_equal %W[a-1], loaded_spec_names
     refute_nil Gem.gemdeps
   end
 
@@ -1918,7 +1910,7 @@ class TestGem < Gem::TestCase
 
     Gem.use_gemdeps
 
-    assert_equal add_bundler_full_name(%W[a-1]), loaded_spec_names
+    assert_equal %W[a-1], loaded_spec_names
   ensure
     ENV['RUBYGEMS_GEMDEPS'] = rubygems_gemdeps
   end
@@ -1989,7 +1981,7 @@ You may need to `gem install -g` to install missing gems
 
     Gem.use_gemdeps
 
-    assert_equal add_bundler_full_name(%W[a-1]), loaded_spec_names
+    assert_equal %W[a-1], loaded_spec_names
   ensure
     ENV['RUBYGEMS_GEMDEPS'] = rubygems_gemdeps
   end
